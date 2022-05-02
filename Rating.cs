@@ -92,19 +92,20 @@ public class Rating
     {
         Console.WriteLine();
         TablePrinter.PrintHeader("Топ 3");
-        var x = teachers.GroupBy(teacher => teacher.VideoService,
-            (s, enumerable) => new
+        var top = teachers.GroupBy(teacher => teacher.VideoService,
+            (name, enume) => new
             {
-                Key = s,
-                Count = enumerable.Count()
+                Key = name,                 //последовательность имён
+                Count = enume.Count()       //последовательность кол-ва использований
             }).OrderBy(arg => arg.Count).Reverse().Take(3).ToList();
-        for (var i = 0; i < x.Count; i++)
+
+        for (var i = 0; i < top.Count; i++)
         {
             Console.Write($"{i + 1} - ");
-            Console.ForegroundColor = services[x[i].Key];
-            Console.Write("{0,-13}", "[" + x[i].Key + "]"); //форматирование ширины столбца
+            Console.ForegroundColor = services[top[i].Key];
+            Console.Write("{0,-13}", "[" + top[i].Key + "]"); //форматирование ширины столбца
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Количество использований: {x[i].Count}");
+            Console.WriteLine($"Количество использований: {top[i].Count}");
         }
         TablePrinter.PrintFooter();
     }
@@ -112,10 +113,10 @@ public class Rating
     public void AddTeacher()
     {
         Console.WriteLine("\nВведите ФИО:");
-        string? fio;
+        string fio;
         while (true)
         {
-            fio = Console.ReadLine();
+            fio = Console.ReadLine() ?? String.Empty;
             if (!Regex.IsMatch(fio, "[А-Я][а-я]{1,20}\\s[А-Я][а-я]{1,20}\\s[А-Я][а-я]{1,20}"))
             {
                 Console.WriteLine("Введите ФИО, согласно стандарту: \"Иванов Иван Иванович\"");
@@ -130,10 +131,10 @@ public class Rating
         }
 
         Console.WriteLine("Введите название института (аббревиатуру):");
-        string? inst;
+        string inst;
         while (true)
         {
-            inst = Console.ReadLine();
+            inst = Console.ReadLine() ?? "";
             if (!Regex.IsMatch(inst, "[А-Я][а-я]{0,1}[А-Я]{1,10}[а-я]{0,1}[А-Я]{0,10}"))
             {
                 Console.WriteLine("Неправильно ввели аббревиатуру, исправьтесь:");
